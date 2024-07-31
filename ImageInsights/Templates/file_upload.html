@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>File Upload</title>
+  </head>
+  <body>
+    <h1>File Upload</h1>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <pre>
+      <label for="JPG File">Enter JPG Extension File</label>
+
+      <input type="file" name="image_file" />
+      <br>
+      <label for="Text File">Enter txt Extension File</label>
+      
+      <input type="file" name="coordinates_file"/>
+
+      <br>
+      <button type="submit">Upload Files</button>
+      </pre>
+      
+  
+    </form>
+  </body>
+  <script lang="javascript">
+    $(document).ready(function () {
+        $("#btn").click(function () {
+            $.get("http://127.0.0.1:8000/result/", function (data, status) {
+                var text = data.replace(/<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/g, "");
+                 console.log(text);
+                alert("Data: " + text);
+            });
+        });
+    });
+</script>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- <script src="jquery-3.7.1.min.js"></script> -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dsplay Data</title>
+  <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 50%;
+    }
+
+    td,
+    th {
+      border: 1px solid #000;
+      text-align: left;
+      padding: 8px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+
+    ul th {
+      width: 57%;
+    }
+  </style>
+</head>
+
+<body>
+
+  {% load static %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <h1>Uploaded File Data</h1>
+
+    <table>
+      {% load static %}
+      <tr>
+        <th>Name</th>
+        <th>Father Name</th>
+        <th>Gender</th>
+        <th>Class</th>
+        <th>D.O.B</th>
+        <th>&nbsp;</th>
+        <th id="uth">Display Image</th>
+      </tr>
+
+      {% for item in file_contents %}
+
+      <tr>
+        <td>{{ item.0 }}</td>
+        <td>{{ item.1 }}</td>
+        <td>{{ item.2 }}</td>
+        <td>{{ item.3 }}</td>
+        <td>{{ item.4 }}</td>
+        <td>
+          <a id="show_{{item.5}}" class="viewbtn" href="javascript:GetData('{{item.5}}');">View</a>
+          <a id="hide_{{item.5}}" class="viewbtn" href="javascript:HideMe('{{item.5}}');"
+            style="display: none;">Hide</a>
+        </td>
+        <td>
+          <div id="div_{{item.5}}">{{line}}</div>
+        </td>
+      </tr>
+      {% endfor %}
+      {{ pathstr }}
+  </form>
+
+</body>
+<script lang=text/javascript>
+  let links = document.querySelectorAll(".viewbtn"); // get all links with id "hide"
+  let cb = document.getElementById("#hide");
+  function HideMe(id) {
+    $("#hide_" + id).hide();
+    $("#show_" + id).show();
+    $("#div_" + id).html("");
+  }
+  function GetData(id) {
+    $.get(("http://127.0.0.1:8000/" + id), function (data, status) {
+      // var text = data.substring(85, 100);
+      // console.log(data)
+      // var text = data.replace(/<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/g, "");
+      const imageElement = new Image();
+      //imageElement.id="img_" + id;
+      imageElement.src = data;
+      imageElement.width = 300;
+      //document.getElementById('imageContainer').appendChild(imageElement);
+      $("#div_" + id).append(imageElement);
+      $("#hide_" + id).show();
+      $("#show_" + id).hide();
+    });
+  }
+</script>
+
+</html>
